@@ -31,7 +31,7 @@
         var r = kv("intent", intent);
         console.log(getQueryObject(entities))
 		  
-        for (var k in entities) {
+        /*for (var k in entities) {
           var e = entities[k];
 
           if (!(e instanceof Array)) {
@@ -43,7 +43,7 @@
           }
         }
 
-        document.getElementById("result").innerHTML = r;
+        document.getElementById("result").innerHTML = r;*/
       };
       mic.onerror = function (err) {
         error("Error: " + err);
