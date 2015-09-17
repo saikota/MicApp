@@ -1,18 +1,24 @@
   <html>
   <head>
     <link rel="stylesheet" href="microphone.min.css">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </head>
   <body style="text-align: center;">
     <center><div id="microphone"></div></center>
     <pre id="result"></pre>
     <div id="info"></div>
     <div id="error"></div>
+	
+	<button id="sbtBtn">Submit to Server</button>
     <script src="microphone.min.js"></script>
 
     <script>
 	if ('speechSynthesis' in window) {
  // Synthesis support. Make your web apps talk!
- 	var msg = new SpeechSynthesisUtterance('Hello World');
+ 	var msg = new SpeechSynthesisUtterance('Hello User, Please Search Our Site using the MIke icon Below');
     window.speechSynthesis.speak(msg);
 	console.log(" Now hear us speak!!");
 }
@@ -40,7 +46,8 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
       };
       mic.onresult = function (intent, entities) {
         var r = kv("intent", intent);
-        console.log(getQueryObject(entities))
+        console.log(getQueryObject(entities));
+		callServer(getQueryObject(entities));
 		  
         for (var k in entities) {
           var e = entities[k];
@@ -94,6 +101,34 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
     }
     return queryObj;
 }
-    </script>
+  
+	$("#sbtBtn").click(function(){
+	var obj= {brands: "Nike", pants: "shirts", color: "red", shirt: "shirt"};
+	callServer(obj);
+	
+	});
+	
+	function callServer(queryObj){
+	$.ajax({
+       url:"http://localhost:3000/sbtVisualSearch",
+	   type: "POST",
+       success: processServerResponse,
+	   data:JSON.stringify(queryObj),
+       dataType: "json",
+	   contentType:"application/json",
+       dataType:"json"
+	});
+	
+	function processServerResponse(msg){
+	  if (typeof msg !== "undefined" || typeof msg !== "null") {
+	   console.log(msg);
+     }
+	 }
+	}
+	
+	
+	
+
+	</script>
   </body>
   </html>
