@@ -10,6 +10,17 @@
     <script src="microphone.min.js"></script>
 
     <script>
+	if ('speechSynthesis' in window) {
+ // Synthesis support. Make your web apps talk!
+ 	var msg = new SpeechSynthesisUtterance('Hello World');
+    window.speechSynthesis.speak(msg);
+	console.log(" Now hear us speak!!");
+}
+else{
+console.log(" Oh No .. Sorry your browser does not support the Ability to Hear Our Voice");
+}
+
+
       var mic = new Wit.Microphone(document.getElementById("microphone"));
       var info = function (msg) {
         document.getElementById("info").innerHTML = msg;
