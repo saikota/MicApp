@@ -21,8 +21,8 @@ app.post('/sbtVisualSearch', function(req, res) {
 	var urlObjs={"msg":"Hello World"}
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	var searchPhrase=req.body.shirt;
-	var searchBrandName="Nike";
+	var searchPhrase=req.body.searchphrase;
+	var searchBrandName=req.body.brands;
 	console.log(" sending values"+searchPhrase+" ,"+searchBrandName);
 	var tmpObj,searchGetProductUrl = "http://localhost:8080/SpringRestExample/rest/search?searchPhrase="+searchPhrase+"&brand="+searchBrandName;
     console.log("post data is",req.body);
