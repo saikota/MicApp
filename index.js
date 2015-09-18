@@ -12,6 +12,9 @@ app.get('/home', function(req,res){
  res.sendfile(__dirname + '/public/index.html');
 });
 
+app.get('/vsearch', function(req,res){
+ res.sendfile(__dirname + '/public/vsearch.html');
+});
 
 app.post('/sbtVisualSearch', function(req, res) {
 	
@@ -19,8 +22,9 @@ app.post('/sbtVisualSearch', function(req, res) {
 	res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	var searchPhrase=req.body.shirt;
-	var searchBrandName=req.body.brands;
-	var tmpObj,searchGetProductUrl = "http://11.142.229.1:8080/SpringRestExample/rest/search?searchPhrase="+searchPhrase+"&brand="+searchBrandName;
+	var searchBrandName="Nike";
+	console.log(" sending values"+searchPhrase+" ,"+searchBrandName);
+	var tmpObj,searchGetProductUrl = "http://localhost:8080/SpringRestExample/rest/search?searchPhrase="+searchPhrase+"&brand="+searchBrandName;
     console.log("post data is",req.body);
    callback = function(response) {
       var str = '';
