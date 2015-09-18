@@ -64,7 +64,8 @@
     <script>
 	if ('speechSynthesis' in window) {
  // Synthesis support. Make your web apps talk!
- 	var msg = new SpeechSynthesisUtterance('Hello User, Please Search Our Site using the MIke icon Below');
+ 	var msg = new SpeechSynthesisUtterance('Hello, Please Search Our Site using the Mike icon Below');
+	var sorryMsg = new SpeechSynthesisUtterance('Sorry, Can you please repeat it');
     window.speechSynthesis.speak(msg);
 	console.log(" Now hear us speak!!");
 }
@@ -85,14 +86,21 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
       };
       mic.onaudiostart = function () {
         info("Recording started");
-        error("");
+        document.getElementById("result").innerHTML = "";
+		error("");
       };
       mic.onaudioend = function () {
         info("Recording stopped, processing started");
       };
       mic.onresult = function (intent, entities) {
         var r = kv("intent", intent);
-        console.log(getQueryObject(entities));
+		if(typeof intent ==="undefined"){
+	           
+                window.speechSynthesis.speak(sorryMsg);
+		
+		}else{
+		
+		console.log(getQueryObject(entities));
 		callServer(getQueryObject(entities));
 		  
         for (var k in entities) {
@@ -108,6 +116,11 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
         }
 
         document.getElementById("result").innerHTML = r;
+		
+		}
+		
+		
+        
       };
       mic.onerror = function (err) {
         error("Error: " + err);
@@ -138,9 +151,19 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
     }
     if (entities.hasOwnProperty("pants")) {
         queryObj.pants = entities.pants.value;
+		queryObj.searchphrase = entities.pants.value;
     }
     if (entities.hasOwnProperty("color")) {
         queryObj.color = entities.color.value;
+    }
+	if (entities.hasOwnProperty("dress")) {
+        queryObj.searchphrase = entities.dress.value;
+    }
+	if (entities.hasOwnProperty("condition")) {
+        queryObj.condition = entities.condition.value;
+    }
+	if (entities.hasOwnProperty("relationship")) {
+        queryObj.relationship = entities.relationship.value;
     }
     if (entities.hasOwnProperty("shirt")) {
         queryObj.shirt = entities.shirt.value;
