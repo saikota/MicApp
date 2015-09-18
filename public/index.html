@@ -1,20 +1,66 @@
   <html>
   <head>
     <link rel="stylesheet" href="microphone.min.css">
+	<title>Macys Intelligent Assistant - Team Stackster</title>
+	<script src="microphone.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.3/handlebars.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="v-img/v.css">
   </head>
   <body style="text-align: center;">
-    <center><div id="microphone"></div></center>
+    <header>
+        <div id="globalMastheadSearchMenu">
+		
+   <div id="globalMastheadBrandLogo" class="left">
+              <a target="_top" href="http://www1.macys.com/index.ognc?cm_sp=navigation-_-top_nav-_-macys_icon">
+                 <div id="macysHomePageLogo" class="globalMastheadLogo" alt="Macy's" title="Macy's"></div>
+              </a>
+    </div>
+    <div id="nav-search-box" role="search" class="left">
+              <form target="_top" name="keywordSearch">
+                 <span id="globalSearchInputContainer">
+                    <!-- span class="mic-icon"></span -->
+                    <input size="9" maxlength="72" type="text" id="globalSearchInputField" class="globalSearchInputField ui-autocomplete-input" name="keyword" value="" autocomplete="off" placeholder="Search" style="color: rgb(0, 0, 0);">
+                    <div id="search_clear" hidden=""></div>
+                    <span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                 </span>
+                 <!-- input type="submit" id="subnavSearchSubmit" value="" border="0" aria-label="Submit product search" -->
+              </form>
+    </div>
+	<ul id="mainnav">
+              <li id="nav-bag" class="icon">
+                 <div id="globalMastheadBag">
+                    <div id="globalMastheadBagTab" class="shadowQB"></div>
+                    <div id="globalMastheadQuickBagHeader">
+                       <div id="nav-bag-tablet">
+                          <a id="bagLink" href="http://www1.macys.com/bag/index.ognc?cm_sp=navigation-_-top_nav-_-bag" title="shopping bag">
+                             <div class="globalMastheadBagIcon"></div>
+                             <span>my bag</span>
+                          </a>
+                       </div>
+                      
+                    </div>
+                 </div>
+              </li>
+           </ul>
+    </div>
+	</header>
+  <div class="container">
+
+	<center><div id="microphone"></div></center>
     <pre id="result"></pre>
     <div id="info"></div>
     <div id="error"></div>
 	
 	<button id="sbtBtn">Submit to Server</button>
-    <script src="microphone.min.js"></script>
-
+	
+	<div id="display">
+    </div>
+</div>
+    
+  
     <script>
 	if ('speechSynthesis' in window) {
  // Synthesis support. Make your web apps talk!
@@ -109,6 +155,8 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
 	});
 	
 	function callServer(queryObj){
+	
+	$("#display").html("");
 	$.ajax({
        url:"http://localhost:3000/sbtVisualSearch",
 	   type: "POST",
@@ -120,15 +168,45 @@ console.log(" Oh No .. Sorry your browser does not support the Ability to Hear O
 	});
 	
 	function processServerResponse(msg){
+	  var jsonObj={}, html, source, template;
 	  if (typeof msg !== "undefined" || typeof msg !== "null") {
-	   console.log(msg);
+	   console.log(msg.msg);  
+       jsonObj=JSON.parse(msg.msg);	   
+	    source= $("#tmplt").html();
+        template = Handlebars.compile(source);
+	   if(typeof jsonObj.searchresultgroups!=="undefined"){
+	    html    = template(jsonObj.searchresultgroups[0].products);
+	    $("#display").html(html);
+       } else {
+	   $("#display").html("<h2> No Search Results Found </h2>");
+	   }
+      
      }
 	 }
 	}
-	
-	
-	
-
 	</script>
+  
+<script id="tmplt" type="text/handlebars">
+<div class="row">
+    {{#each product}}
+    <div class=".col-xs-12 .col-sm-6 .col-lg-8">
+                  <a class="browse-product-anchor" href="{{this.summary.producturl}}">
+                  <div class="product-image">
+                      <img src="{{this.image.0.imageurl}}">
+                      <div class="more-colors">2 colors</div>
+                  </div>
+                  <div class="product-details">
+                        <div class="product-name truncated" style="word-wrap: break-word;">{{this.summary.name}}</div>
+                        <div class="product-prices" style="margin-bottom: 0.625em;">
+                           
+                                    <span class="product-price-label">Everyday Value</span>${{this.price.regular.value}}
+                              
+                        </div>
+                  </div>
+                  </a>
+    </div>
+    {{/each}}
+  </div>
+  </script>
   </body>
   </html>
